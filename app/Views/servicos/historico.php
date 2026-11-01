@@ -1,87 +1,104 @@
-<div class="max-w-5xl mx-auto px-4 py-6">
-    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-elcar-blue">Histórico do Veículo</h1>
-            <p class="text-gray-600">Registo completo de manutenções e reparações por placa</p>
-        </div>
-        <a href="/app/dashboard" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition text-sm">
-            &larr; Voltar ao Dashboard
-        </a>
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-elcar-blue">Histórico por Placa</h1>
+        <p class="text-gray-600 font-bold">Pesquise todo o histórico de manutenções de um veículo específico.</p>
     </div>
 
-    <!-- Barra de Pesquisa -->
+    <!-- Formulário de Pesquisa -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
-        <form action="/app/historico" method="GET" class="flex flex-col sm:flex-row gap-4">
-            <input type="text" name="placa" value="<?= htmlspecialchars($placa ?? '') ?>" placeholder="Digite a placa (ex: ABC-1234 ou ABC1D23)" class="flex-grow px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-elcar-secondary" required>
-            <button type="submit" class="bg-elcar-blue text-white px-6 py-2.5 rounded-xl font-bold hover:bg-elcar-secondary transition shadow-sm">Pesquisar Placa</button>
+        <form action="/app/historico" method="GET" class="flex flex-col sm:flex-row gap-4 items-end">
+            <div class="w-full sm:w-1/3">
+                <label class="block text-sm font-bold text-gray-700 mb-1">Placa do Veículo</label>
+                <input type="text" name="placa" value="<?= htmlspecialchars($placa ?? '') ?>" placeholder="Ex: ABC1234 ou ABC-1234" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-elcar-blue uppercase font-bold text-gray-800">
+            </div>
+            <button type="submit" class="bg-elcar-blue hover:bg-blue-800 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-sm w-full sm:w-auto">
+                 Pesquisar Histórico
+            </button>
         </form>
     </div>
 
-    <?php if (!empty($placa) && empty($veiculo)): ?>
-        <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-6 rounded-2xl text-center">
-            <p class="font-bold">Nenhum veículo encontrado com a placa "<?= htmlspecialchars($placa) ?>".</p>
-            <p class="text-sm mt-1">Verifique se a placa foi digitada corretamente ou se o veículo está registado no sistema.</p>
-        </div>
-    <?php elseif (!empty($veiculo)): ?>
-        <!-- Dados do Veículo e Cliente -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-1">Veículo</span>
-                <h3 class="text-2xl font-black text-elcar-blue"><?= htmlspecialchars($veiculo['plate_display']) ?></h3>
-                <p class="text-gray-700 font-medium"><?= htmlspecialchars($veiculo['brand'] . ' ' . $veiculo['model']) ?> (<?= htmlspecialchars($veiculo['model_year'] ?? 'Ano N/D') ?>)</p>
-                <p class="text-sm text-gray-500 mt-1">Cor: <?= htmlspecialchars($veiculo['color'] ?? 'Não informada') ?></p>
-            </div>
-            <div>
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-1">Proprietário (Cliente)</span>
-                <h3 class="text-xl font-bold text-gray-800"><?= htmlspecialchars($veiculo['client_name']) ?></h3>
-                <p class="text-sm text-gray-600 mt-1">Telemóvel: <?= htmlspecialchars($veiculo['phone'] ?? 'Não informado') ?></p>
-            </div>
-        </div>
-
-        <!-- Linha do Tempo / Lista de OS do Veículo -->
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Ordens de Serviço Registadas (<?= count($servicos) ?>)</h2>
-        
-        <?php if (empty($servicos)): ?>
-            <div class="bg-gray-50 p-6 rounded-2xl border border-dashed border-gray-200 text-center text-gray-500">
-                Este veículo ainda não possui ordens de serviço registadas.
+    <?php if (!empty($placa)): ?>
+        <?php if (!$veiculo): ?>
+            <!-- Alerta de Veículo não encontrado -->
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded text-yellow-800 font-bold shadow-sm">
+                Nenhum veículo encontrado com a placa "<?= htmlspecialchars($placa) ?>". Verifique se digitou corretamente ou se o veículo já foi cadastrado.
             </div>
         <?php else: ?>
-            <div class="space-y-4">
-                <?php foreach ($servicos as $os): ?>
-                    <?php
-                        $badge = match($os['status']) {
-                            'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-300',
-                            'in_progress' => 'bg-blue-100 text-blue-800 border-blue-300',
-                            'completed' => 'bg-green-100 text-green-800 border-green-300',
-                            default => 'bg-gray-100 text-gray-800 border-gray-300'
-                        };
-                        $label = match($os['status']) {
-                            'pending' => 'Pendente',
-                            'in_progress' => 'Em Execução',
-                            'completed' => 'Concluído',
-                            default => $os['status']
-                        };
-                    ?>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="font-black text-lg text-elcar-blue">OS #<?= str_pad((string)$os['id'], 5, '0', STR_PAD_LEFT) ?></span>
-                                <span class="<?= $badge ?> text-xs px-3 py-1 rounded-full font-bold uppercase border"><?= $label ?></span>
-                                <span class="text-xs text-gray-400">Abertura: <?= date('d/m/Y H:i', strtotime($os['created_at'])) ?></span>
-                            </div>
-                            <p class="text-gray-700 text-sm max-w-2xl"><?= htmlspecialchars($os['description']) ?></p>
-                        </div>
-                        <div class="flex flex-row md:flex-col justify-between items-end w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 gap-2">
-                            <div class="text-left md:text-right">
-                                <span class="text-xs text-gray-400 block">Valor Total</span>
-                                <strong class="text-lg text-gray-800">R$ <?= number_format((float)$os['total_amount'], 2, ',', '.') ?></strong>
-                            </div>
-                            <a href="/app/servicos/imprimir?id=<?= $os['id'] ?>" class="bg-elcar-secondary hover:bg-elcar-blue text-white text-xs px-4 py-2 rounded-lg font-bold transition shadow-sm">
-                                Ver / Imprimir
-                            </a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <!-- Informações do Veículo Encontrado -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800"><?= htmlspecialchars($veiculo['brand'] . ' ' . $veiculo['model']) ?></h2>
+                    <p class="text-gray-600 font-bold text-lg mt-1">Placa: <span class="text-elcar-blue"><?= htmlspecialchars($veiculo['plate_display']) ?></span></p>
+                    <p class="text-sm text-gray-500 mt-2 font-bold border-t border-gray-100 pt-2">
+                         Cliente: <?= htmlspecialchars($veiculo['client_name']) ?> <span class="mx-2">|</span>  Tel: <?= htmlspecialchars($veiculo['phone'] ?? 'Não informado') ?>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tabela de Ordens de Serviço -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 bg-gray-50 flex flex-wrap justify-between items-center gap-2">
+                    <h2 class="text-lg font-bold text-elcar-blue">Ordens de Serviço do Veículo</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm whitespace-nowrap">
+                        <thead class="bg-white text-gray-500 font-bold border-b border-gray-100 uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">OS #</th>
+                                <th class="px-6 py-4">Data de Abertura</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Valor Total</th>
+                                <th class="px-6 py-4 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <?php if (empty($servicos)): ?>
+                                <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500 font-bold">Nenhum serviço registado no histórico para este veículo.</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($servicos as $os): ?>
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="px-6 py-4 font-bold text-gray-800 text-lg">#<?= str_pad((string)$os['id'], 5, '0', STR_PAD_LEFT) ?></td>
+                                        <td class="px-6 py-4 text-gray-600 font-bold"><?= date('d/m/Y H:i', strtotime($os['created_at'])) ?></td>
+                                        <td class="px-6 py-4">
+                                            <?php
+                                                $badgeClass = match($os['status']) {
+                                                    'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                                    'in_progress' => 'bg-blue-100 text-blue-800 border-blue-200',
+                                                    'completed' => 'bg-green-100 text-green-800 border-green-200',
+                                                    default => 'bg-gray-100 text-gray-800'
+                                                };
+                                                $statusLabel = match($os['status']) {
+                                                    'pending' => 'Pendente',
+                                                    'in_progress' => 'Em Execução',
+                                                    'completed' => 'Concluído',
+                                                    default => 'Desconhecido'
+                                                };
+                                            ?>
+                                            <span class="px-3 py-1.5 rounded-full text-xs font-bold border <?= $badgeClass ?>">
+                                                <?= $statusLabel ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right font-black text-green-600 text-base">
+                                            R$ <?= number_format((float)$os['total_amount'], 2, ',', '.') ?>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <!-- BOTÕES IGUAIS AOS DA TELA INICIAL -->
+                                            <?php if ($os['status'] === 'completed'): ?>
+                                                <a href="/app/servicos/gerenciar?id=<?= $os['id'] ?>" class="inline-flex items-center gap-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow-sm">
+                                                     Ver OS
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="/app/servicos/gerenciar?id=<?= $os['id'] ?>" class="inline-flex items-center gap-1 bg-elcar-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow-sm">
+                                                     Gerir OS
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <?php endif; ?>
     <?php endif; ?>

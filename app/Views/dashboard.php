@@ -1,14 +1,21 @@
-<div class="mb-6 flex justify-between items-end">
+<div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
     <div>
         <h1 class="text-3xl font-bold text-elcar-blue">Dashboard</h1>
         <p class="text-gray-600">Resumo operacional da oficina</p>
+        
+        <!-- NOVO BOTÃO DA LISTA DE REPOSIÇÃO -->
+        <div class="mt-3">
+            <a href="/app/estoque/compras" class="inline-flex items-center gap-2 bg-elcar-blue hover:bg-blue-800 text-white font-bold py-1.5 px-4 rounded text-sm transition shadow-sm">
+                 Lista de Reposição
+            </a>
+        </div>
     </div>
     
     <!-- Atalhos (Secção 6.3) -->
-    <div class="flex gap-2">
-        <a href="/app/clientes/novo" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 transition">Novo Cliente</a>
-        <a href="/app/veiculos/novo" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 transition">Novo Veículo</a>
-        <a href="/app/servicos/novo" class="bg-elcar-secondary text-white font-bold px-4 py-2 rounded shadow hover:bg-elcar-blue transition">+ Novo Serviço</a>
+    <div class="flex flex-col sm:flex-row flex-wrap gap-2">
+        <a href="/app/clientes/novo" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 transition text-center">Novo Cliente</a>
+        <a href="/app/veiculos/novo" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 transition text-center">Novo Veículo</a>
+        <a href="/app/servicos/novo" class="bg-elcar-secondary text-white font-bold px-4 py-2 rounded shadow hover:bg-elcar-blue transition text-center">+ Novo Serviço</a>
     </div>
 </div>
 
@@ -35,9 +42,9 @@
 <!-- Pesquisa Rápida (Histórico por placa) -->
 <div class="bg-white p-6 rounded-lg shadow mb-8">
     <h2 class="text-lg font-bold text-elcar-blue mb-4">Consultar Histórico</h2>
-    <form action="/app/historico" method="GET" class="flex gap-4">
+    <form action="/app/historico" method="GET" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <input type="text" name="placa" placeholder="Digite a placa (ex: ABC-1234 ou ABC1D23)" class="flex-grow px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary" required>
-        <button type="submit" class="bg-elcar-blue text-white px-6 py-2 rounded hover:bg-elcar-secondary transition">Pesquisar</button>
+        <button type="submit" class="bg-elcar-blue text-white px-6 py-2 rounded hover:bg-elcar-secondary transition sm:shrink-0">Pesquisar</button>
     </form>
 </div>
 

@@ -1,52 +1,59 @@
-<div class="mb-6">
-    <h1 class="text-3xl font-bold text-elcar-blue">Nova Ordem de Serviço</h1>
-    <p class="text-gray-600">Abertura de serviço para um veículo</p>
-</div>
+<div class="max-w-3xl mx-auto bg-white p-5 sm:p-8 rounded-lg shadow-sm border border-gray-100 mt-6">
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-elcar-blue">Abertura de Ordem de Serviço</h2>
+        <p class="text-gray-500 text-sm">Inicie um novo atendimento registando o veículo e o relato do cliente.</p>
+    </div>
 
-<div class="bg-white rounded-lg shadow p-6 max-w-4xl">
-    <form action="/app/servicos/salvar" method="POST">
+    <form action="/app/servicos/salvar" method="POST" class="space-y-6">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- Seleção do Veículo -->
-            <div class="col-span-1 md:col-span-2">
-                <label for="vehicle_id" class="block text-sm font-medium text-gray-700 mb-1">Veículo (Placa / Modelo - Cliente) *</label>
-                <select id="vehicle_id" name="vehicle_id" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary bg-white">
-                    <option value="">-- Selecione um veículo --</option>
-                    <?php foreach ($veiculos as $v): ?>
-                        <option value="<?= $v['id'] ?>">
-                            <?= htmlspecialchars($v['plate_display']) ?> - <?= htmlspecialchars($v['model']) ?> 
-                            (<?= htmlspecialchars($v['client_name']) ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+        <!-- CAMPO VEÍCULO DIGITÁVEL -->
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Selecionar Veículo (Digite a placa ou carro) *</label>
+            <select name="vehicle_id" id="vehicle-select" required class="w-full" placeholder="Comece a digitar a placa ou nome...">
+                <option value="">Selecione um veículo...</option>
+                <?php foreach ($veiculos as $v): ?>
+                    <option value="<?= $v['id'] ?>">
+                        <?= htmlspecialchars($v['plate_display']) ?> - <?= htmlspecialchars($v['model']) ?> (Dono: <?= htmlspecialchars($v['client_name']) ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-            <!-- Descrição do Serviço -->
-            <div class="col-span-1 md:col-span-2">
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descrição do Problema / Serviço Solicitado *</label>
-                <textarea id="description" name="description" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary"></textarea>
-            </div>
+        <div>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Relato do Problema / Serviço Inicial *</label>
+            <textarea name="description" rows="4" required placeholder="Descreva o problema relatado..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-elcar-secondary resize-none"></textarea>
+        </div>
 
-            <!-- Status Inicial -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status da OS *</label>
-                <select id="status" name="status" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary bg-white">
-                    <option value="pending" selected>Pendente (Aguardando Orçamento/Aprovação)</option>
+                <label class="block text-sm font-bold text-gray-700 mb-1">Status Inicial</label>
+                <select name="status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50">
+                    <option value="pending">Pendente / Orçamento</option>
                     <option value="in_progress">Em Execução</option>
                     <option value="completed">Concluído</option>
                 </select>
             </div>
-
-            <!-- Valor Total (Estimativa) -->
             <div>
-                <label for="total_amount" class="block text-sm font-medium text-gray-700 mb-1">Valor Total Estimado (R$)</label>
-                <input type="number" step="0.01" min="0" id="total_amount" name="total_amount" value="0.00" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary">
+                <label class="block text-sm font-bold text-gray-700 mb-1">Valor Estimado (R$)</label>
+                <input type="number" step="0.01" min="0" name="total_amount" value="0.00" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
             </div>
         </div>
 
-        <div class="flex justify-end gap-3 border-t pt-4 mt-6">
-            <a href="/app/servicos" class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded shadow-sm hover:bg-gray-50 transition">Cancelar</a>
-            <button type="submit" class="bg-elcar-blue text-white px-6 py-2 rounded shadow hover:bg-elcar-secondary transition">Salvar OS</button>
+        <div class="pt-4 flex flex-col-reverse sm:flex-row gap-3 border-t border-gray-100">
+            <a href="/app/servicos" class="px-6 py-2.5 bg-gray-100 text-gray-700 font-bold rounded-lg hover:bg-gray-200 text-center">Cancelar</a>
+            <button type="submit" class="px-6 py-2.5 bg-elcar-blue text-white font-bold rounded-lg hover:bg-elcar-secondary">Abrir OS</button>
         </div>
     </form>
 </div>
+
+<!-- Scripts para fazer o campo Select aceitar digitação -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        new TomSelect('#vehicle-select', {
+            create: false,
+            sortField: { field: "text", direction: "asc" }
+        });
+    });
+</script>

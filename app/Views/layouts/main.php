@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
     <title>Elcar Autopeças e Serviços</title>
     
     <!-- Tailwind CSS CDN com a Identidade Visual (Seção 9.3) -->
@@ -29,8 +30,8 @@
     
     <!-- Cabeçalho (Seção 6.1) -->
     <header class="bg-elcar-blue text-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold flex items-center">
+        <div class="container mx-auto px-4 py-4 flex flex-wrap gap-y-3 items-center">
+            <div class="text-2xl font-bold flex items-center mr-auto">
                 <a href="/" class="text-white hover:text-elcar-yellow transition">ELCAR</a>
             </div>
             
@@ -41,10 +42,22 @@
                 <a href="#sobre" class="hover:text-elcar-yellow transition">Sobre</a>
                 <a href="#contato" class="hover:text-elcar-yellow transition">Contato</a>
             </nav>
+
+            <details class="md:hidden relative">
+                <summary class="list-none cursor-pointer rounded border border-elcar-secondary px-3 py-2 text-sm font-bold hover:bg-elcar-secondary">
+                    Menu
+                </summary>
+                <nav class="absolute right-0 top-full z-20 mt-2 flex min-w-40 flex-col rounded-lg bg-white py-2 text-elcar-text shadow-lg">
+                    <a href="/" class="px-4 py-2 hover:bg-gray-100">Início</a>
+                    <a href="#servicos" class="px-4 py-2 hover:bg-gray-100">Serviços</a>
+                    <a href="#sobre" class="px-4 py-2 hover:bg-gray-100">Sobre</a>
+                    <a href="#contato" class="px-4 py-2 hover:bg-gray-100">Contato</a>
+                </nav>
+            </details>
             
             <!-- Botão de Acesso -->
-            <div>
-                <a href="/login" class="bg-elcar-yellow text-elcar-blue font-bold px-5 py-2 rounded hover:bg-yellow-400 transition">
+            <div class="ml-2">
+                <a href="/login" class="bg-elcar-yellow text-elcar-blue font-bold px-3 sm:px-5 py-2 rounded hover:bg-yellow-400 transition text-sm sm:text-base whitespace-nowrap">
                     Acessar Sistema
                 </a>
             </div>

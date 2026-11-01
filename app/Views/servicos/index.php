@@ -1,74 +1,77 @@
-<div class="mb-6 flex justify-between items-end">
-    <div>
-        <h1 class="text-3xl font-bold text-elcar-blue">Ordens de Serviço</h1>
-        <p class="text-gray-600">Gestão de manutenções e reparações</p>
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 class="text-2xl font-bold text-elcar-blue">Ordens de Serviço</h1>
+        <a href="/app/servicos/novo" class="bg-elcar-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-sm flex items-center justify-center gap-2">
+            <span>+</span> Nova OS
+        </a>
     </div>
-    <a href="/app/servicos/novo" class="bg-elcar-secondary text-white font-bold px-4 py-2 rounded shadow hover:bg-elcar-blue transition">
-        + Nova OS
-    </a>
-</div>
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <div class="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-        <input type="text" placeholder="Pesquisar por OS, placa ou cliente..." class="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-elcar-secondary">
-    </div>
-    
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-100 text-gray-600 text-sm uppercase">
-                    <th class="py-3 px-6 font-semibold">OS #</th>
-                    <th class="py-3 px-6 font-semibold">Veículo / Placa</th>
-                    <th class="py-3 px-6 font-semibold">Cliente</th>
-                    <th class="py-3 px-6 font-semibold text-center">Status</th>
-                    <th class="py-3 px-6 font-semibold text-right">Valor Total</th>
-                    <th class="py-3 px-6 font-semibold text-center">Ações</th>
-                </tr>
-            </thead>
-            <tbody class="text-gray-700">
-                <?php if (empty($servicos)): ?>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-gray-50 text-gray-700 font-bold border-b border-gray-200 uppercase text-xs">
                     <tr>
-                        <td colspan="6" class="py-6 px-6 text-center text-gray-500">Nenhuma Ordem de Serviço registada.</td>
+                        <th class="px-6 py-4">OS #</th>
+                        <th class="px-6 py-4">Data</th>
+                        <th class="px-6 py-4">Cliente</th>
+                        <th class="px-6 py-4">Veículo</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-right">Total</th>
+                        <th class="px-6 py-4 text-center">Ações</th>
                     </tr>
-                <?php else: ?>
-                    <?php foreach ($servicos as $os): ?>
-                        <tr class="border-b hover:bg-gray-50 transition">
-                            <td class="py-3 px-6 font-bold text-gray-800">#<?= str_pad((string)$os['id'], 5, '0', STR_PAD_LEFT) ?></td>
-                            <td class="py-3 px-6">
-                                <span class="font-bold text-elcar-blue"><?= htmlspecialchars($os['plate_display']) ?></span>
-                                <br>
-                                <span class="text-xs text-gray-500"><?= htmlspecialchars($os['model']) ?></span>
-                            </td>
-                            <td class="py-3 px-6"><?= htmlspecialchars($os['client_name']) ?></td>
-                            <td class="py-3 px-6 text-center">
-                                <?php
-                                    $statusColors = [
-                                        'pending' => 'bg-yellow-100 text-yellow-800',
-                                        'in_progress' => 'bg-blue-100 text-blue-800',
-                                        'completed' => 'bg-green-100 text-green-800',
-                                        'cancelled' => 'bg-red-100 text-red-800'
-                                    ];
-                                    $statusLabels = [
-                                        'pending' => 'Pendente',
-                                        'in_progress' => 'Em Execução',
-                                        'completed' => 'Concluído',
-                                        'cancelled' => 'Cancelado'
-                                    ];
-                                    $color = $statusColors[$os['status']] ?? 'bg-gray-100 text-gray-800';
-                                    $label = $statusLabels[$os['status']] ?? $os['status'];
-                                ?>
-                                <span class="<?= $color ?> text-xs px-2 py-1 rounded-full"><?= $label ?></span>
-                            </td>
-                            <td class="py-3 px-6 text-right font-medium">R$ <?= number_format((float)$os['total_amount'], 2, ',', '.') ?></td>
-                            <td class="py-3 px-6 text-center">
-                                <a href="/app/servicos/imprimir?id=<?= $os['id'] ?>" class="bg-elcar-blue text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-elcar-secondary transition shadow-sm">
-                                    Imprimir OS
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <?php if (empty($servicos)): ?>
+                        <tr><td colspan="7" class="px-6 py-8 text-center text-gray-500 font-bold">Nenhuma Ordem de Serviço encontrada.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($servicos as $os): ?>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-bold text-elcar-blue">#<?= str_pad((string)$os['id'], 5, '0', STR_PAD_LEFT) ?></td>
+                                <td class="px-6 py-4 text-gray-600"><?= date('d/m/Y', strtotime($os['created_at'])) ?></td>
+                                <td class="px-6 py-4 font-bold text-gray-800"><?= htmlspecialchars($os['client_name']) ?></td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded font-bold uppercase border border-gray-200 text-xs">
+                                        <?= htmlspecialchars($os['plate_display']) ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <?php
+                                        $badgeClass = match($os['status']) {
+                                            'pending' => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                                            'in_progress' => 'bg-blue-100 text-blue-800 border-blue-200',
+                                            'completed' => 'bg-green-100 text-green-800 border-green-200',
+                                            default => 'bg-gray-100 text-gray-800'
+                                        };
+                                        $statusLabel = match($os['status']) {
+                                            'pending' => 'Pendente',
+                                            'in_progress' => 'Em Execução',
+                                            'completed' => 'Concluído',
+                                            default => 'Desconhecido'
+                                        };
+                                    ?>
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold border <?= $badgeClass ?>">
+                                        <?= $statusLabel ?>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right font-black text-gray-900">
+                                    R$ <?= number_format((float)$os['total_amount'], 2, ',', '.') ?>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <?php if ($os['status'] === 'completed'): ?>
+                                        <a href="/app/servicos/gerenciar?id=<?= $os['id'] ?>" class="inline-flex items-center gap-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-1.5 px-4 rounded text-sm transition shadow-sm">
+                                             Ver OS
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="/app/servicos/gerenciar?id=<?= $os['id'] ?>" class="inline-flex items-center gap-1 bg-elcar-blue hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded text-sm transition shadow-sm">
+                                             Gerir OS
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
