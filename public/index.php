@@ -7,11 +7,15 @@ require_once dirname(__DIR__) . '/config/database.php';
 loadEnv(dirname(__DIR__) . '/.env');
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'America/Fortaleza');
 
+// Detect HTTPS both directly and when SSL is terminated by the hosting proxy.
+$isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off')
+    || strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https';
+
 // Configuração segura de sessão (Seção 10.1)
 session_set_cookie_params([
     'lifetime' => 0,
     'path'     => '/',
-    'secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
+    'secure'   => $isHttps,
     'httponly' => true,
     'samesite' => 'Lax',
 ]);

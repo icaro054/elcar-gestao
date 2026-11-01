@@ -1,0 +1,21 @@
+Options -Indexes
+RewriteEngine On
+
+# Keep application URLs at the domain root instead of exposing /public.
+RewriteRule ^public/index\.php$ / [R=302,L,NC]
+RewriteRule ^public(?:/(.*))?$ /$1 [R=302,L,NE]
+
+# Protect application source, configuration, and runtime data when the project
+# root is used as the hosting document root.
+RewriteRule ^(?:config|database|routes|storage|vendor|\.git)(?:/|$) - [F,L,NC]
+RewriteRule ^app/?$ - [F,L,NC]
+RewriteRule ^app/(?:controllers|middleware|models|services|views)(?:/|$) - [F,L,NC]
+RewriteRule ^\.env(?:$|\.) - [F,L,NC]
+
+# Serve public assets from the public directory.
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+# Route application URLs through the public front controller.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ public/index.php [QSA,L]

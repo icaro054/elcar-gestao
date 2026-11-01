@@ -1,5 +1,6 @@
 # Variáveis de ambiente e segredos
 .env
+.vscode/
 
 # Logs e uploads locais (mantém apenas a estrutura com .gitkeep)
 /storage/logs/*

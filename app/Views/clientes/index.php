@@ -1,9 +1,9 @@
-<div class="mb-6 flex justify-between items-end">
+<div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
     <div>
         <h1 class="text-3xl font-bold text-elcar-blue">Clientes</h1>
         <p class="text-gray-600">Gestão de proprietários e responsáveis</p>
     </div>
-    <a href="/app/clientes/novo" class="bg-elcar-secondary text-white font-bold px-4 py-2 rounded shadow hover:bg-elcar-blue transition">
+    <a href="/app/clientes/novo" class="bg-elcar-secondary text-white font-bold px-4 py-2 rounded shadow hover:bg-elcar-blue transition text-center">
         + Novo Cliente
     </a>
 </div>

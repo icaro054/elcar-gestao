@@ -3,7 +3,7 @@
     <p class="text-gray-600">Registe os dados do veículo e vincule ao cliente</p>
 </div>
 
-<div class="bg-white rounded-lg shadow p-6 max-w-3xl">
+<div class="bg-white rounded-lg shadow p-5 sm:p-6 max-w-3xl">
     <form action="/app/veiculos/salvar" method="POST">
         
         <!-- Seleção de Cliente (Secção 6.5) -->
@@ -58,8 +58,8 @@
             </div>
         </div>
 
-        <div class="flex justify-end gap-3 border-t pt-4 mt-6">
-            <a href="/app/veiculos" class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded shadow-sm hover:bg-gray-50 transition">Cancelar</a>
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 border-t pt-4 mt-6">
+            <a href="/app/veiculos" class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded shadow-sm hover:bg-gray-50 transition text-center">Cancelar</a>
             <button type="submit" class="bg-elcar-blue text-white px-6 py-2 rounded shadow hover:bg-elcar-secondary transition">Salvar Veículo</button>
         </div>
     </form>
